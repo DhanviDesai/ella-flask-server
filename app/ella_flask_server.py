@@ -69,7 +69,7 @@ def extract_papers(query):
     query_url = attach_search_query(query)
     webdriver = initialize_webdriver()
     with webdriver as driver:
-        wait = WebDriverWait(driver,3)
+        wait = WebDriverWait(driver,8)
         driver.get(query_url)
         wait.until(presence_of_element_located((By.CLASS_NAME,"main-section")))
         print('Finished waiting')
