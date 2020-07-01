@@ -1,8 +1,8 @@
 from flask import Flask
-import extract_ieee_papers_info as epi
+import extract_ieee_papers_info
 
 app = Flask(__name__)
 
 @app.route('/')
 def main_root():
-    epi.extract_papers('edge computing')
+    extract_ieee_papers_info.extract_papers('edge computing')
