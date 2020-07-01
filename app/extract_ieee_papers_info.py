@@ -8,7 +8,8 @@ import math
 import time
 
 base_url = "https://ieeexplore.ieee.org/search/searchresult.jsp?"
-chrome_path = "/home/dhanvidesai/Headless_Browsers/ChromeDriver/chromedriver_linux64/chromedriver"
+
+#chrome_path = "/home/dhanvidesai/Headless_Browsers/ChromeDriver/chromedriver_linux64/chromedriver"
 
 def attach_search_query(query):
     query_url = base_url+"queryText="+query
@@ -16,8 +17,11 @@ def attach_search_query(query):
 
 def initialize_webdriver():
     chrome_options = Options()
+    chrome_options.binary_location = GOOGLE_CHROME_BIN
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--headless")
-    webdriver1 = webdriver.Chrome(executable_path=chrome_path,options=chrome_options)
+    webdriver1 = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,options=chrome_options)
     return webdriver1
 
 def get_paper_title(div):
@@ -53,9 +57,9 @@ def get_total_count_and_pages(div):
     total_pages = math.ceil(total_count/25)
     return total_count,total_pages
 
-def main():
+def extract_papers(query):
     start = time.time()
-    query_url = attach_search_query(sys.argv[1])
+    query_url = attach_search_query(query)
     webdriver = initialize_webdriver()
     with webdriver as driver:
         wait = WebDriverWait(driver,3)
@@ -78,6 +82,3 @@ def main():
         driver.close()
     end = time.time()
     print(end-start)
-
-if __name__ == "__main__":
-    main()
