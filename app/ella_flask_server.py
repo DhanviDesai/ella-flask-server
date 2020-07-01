@@ -91,4 +91,4 @@ def extract_papers(query):
 
 @app.route('/')
 def main_root():
-    extract_papers('edge computing')
+    extract_papers('ml')
