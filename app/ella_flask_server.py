@@ -10,6 +10,10 @@ import time
 
 base_url = "https://ieeexplore.ieee.org/search/searchresult.jsp?"
 
+GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google_chrome'
+
+CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
+
 app = Flask(__name__)
 
 def attach_search_query(query):
