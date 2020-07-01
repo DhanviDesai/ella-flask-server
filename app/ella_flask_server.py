@@ -73,7 +73,7 @@ def extract_papers(query):
         driver.get(query_url)
         wait.until(presence_of_element_located((By.CLASS_NAME,"main-section")))
         print('Finished waiting')
-        #total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0])
+        total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0])
         print(total_count)
         print(total_pages)
         print("*********************************************************************")
