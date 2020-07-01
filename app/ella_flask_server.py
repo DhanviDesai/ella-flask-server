@@ -7,10 +7,11 @@ from selenium.webdriver.support.expected_conditions import presence_of_element_l
 import sys
 import math
 import time
+import os
 
 base_url = "https://ieeexplore.ieee.org/search/searchresult.jsp?"
 
-GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google_chrome'
+#GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google_chrome'
 
 #CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 
@@ -22,11 +23,11 @@ def attach_search_query(query):
 
 def initialize_webdriver():
     chrome_options = Options()
-    chrome_options.binary_location = GOOGLE_CHROME_BIN
+    chrome_options.binary_location = os.environ.get(GOOGLE_CHROME_BIN)
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--headless")
-    webdriver1 = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,options=chrome_options)
+    webdriver1 = webdriver.Chrome(executable_path=str(os.environ.get(CHROMEDRIVER_PATH)),options=chrome_options)
     return webdriver1
 
 def get_paper_title(div):
