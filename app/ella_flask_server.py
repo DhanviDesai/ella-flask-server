@@ -23,11 +23,11 @@ def attach_search_query(query):
 
 def initialize_webdriver():
     chrome_options = Options()
-    chrome_options.binary_location = os.environ.get(GOOGLE_CHROME_BIN)
+    chrome_options.binary_location = GOOGLE_CHROME_BIN
     chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--headless")
-    webdriver1 = webdriver.Chrome(executable_path=str(os.environ.get(CHROMEDRIVER_PATH)),options=chrome_options)
+    webdriver1 = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH,options=chrome_options)
     return webdriver1
 
 def get_paper_title(div):
