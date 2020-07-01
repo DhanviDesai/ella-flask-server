@@ -28,6 +28,7 @@ def initialize_webdriver():
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--headless")
     webdriver1 = webdriver.Chrome(executable_path=str(os.environ.get("CHROMEDRIVER_PATH")),options=chrome_options)
+    print('Finished initalize')
     return webdriver1
 
 def get_paper_title(div):
@@ -71,7 +72,8 @@ def extract_papers(query):
         wait = WebDriverWait(driver,3)
         driver.get(query_url)
         wait.until(presence_of_element_located((By.CLASS_NAME,"main-section")))
-        total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0])
+        print('Finished waiting')
+        #total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0])
         print(total_count)
         print(total_pages)
         print("*********************************************************************")
