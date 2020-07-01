@@ -18,7 +18,7 @@ CHROMEDRIVER_PATH = '/app/.chromedriver/bin/chromedriver'
 app = Flask(__name__)
 
 def attach_search_query(query):
-    query_url = base_url+"queryText="+query
+    query_url = base_url+"queryText="+query+"&rowsPerPage=10"
     return query_url
 
 def initialize_webdriver():
