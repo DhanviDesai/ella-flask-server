@@ -21,8 +21,8 @@ web_driver = None
 
 app = Flask(__name__)
 
-def attach_search_query(query):
-    query_url = base_url+"queryText="+query+"&rowsPerPage=25"
+def attach_search_query(query,rows_per_page):
+    query_url = base_url+"queryText="+query+"&rowsPerPage="+rows_per_page
     return query_url
 
 def initialize_webdriver():
@@ -61,17 +61,17 @@ def get_paper_description(div):
     publisher_info = pub.split("|")
     return description,publisher_info
 
-def get_total_count_and_pages(div):
+def get_total_count_and_pages(div,rows_per_page):
     dashboard_header = div.find_elements_by_class_name("Dashboard-header")[0]
     span = dashboard_header.find_elements_by_tag_name("span")[0]
     strong_span = span.find_elements_by_tag_name("span")[1]
     total_count = int(strong_span.text.replace(",",""))
-    total_pages = math.ceil(total_count/25)
+    total_pages = math.ceil(total_count/rows_per_page)
     return total_count,total_pages
 
-def extract_papers(query):
+def extract_papers(query,rows_per_page):
     start = time.time()
-    query_url = attach_search_query(query)
+    query_url = attach_search_query(query,rows_per_page)
     web_driver = initialize_webdriver()
     final_paper_list = {}
     with web_driver as driver:
@@ -79,7 +79,7 @@ def extract_papers(query):
         driver.get(query_url)
         wait.until(presence_of_element_located((By.CLASS_NAME,"main-section")))
         print('Finished waiting')
-        total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0])
+        total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0],rows_per_page)
         final_paper_list["total_count"] = total_count
         final_paper_list["total_pages"] = total_pages
         #print(total_count)
@@ -117,5 +117,6 @@ def home_page():
 @app.route("/search",methods=["GET","POST"])
 def search():
     query_text = request.args.get("queryText")
-    response = extract_papers(query_text)
+    rows_per_page = request.args.get("rowsPerPage")
+    response = extract_papers(query_text,rows_per_page)
     return response
