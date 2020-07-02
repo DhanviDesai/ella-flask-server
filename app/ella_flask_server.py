@@ -72,8 +72,7 @@ def get_total_count_and_pages(div):
 def extract_papers(query):
     start = time.time()
     query_url = attach_search_query(query)
-    if web_driver == None:
-        web_driver = initialize_webdriver()
+    web_driver = initialize_webdriver()
     final_paper_list = []
     with web_driver as driver:
         wait = WebDriverWait(driver,20)
