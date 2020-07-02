@@ -22,7 +22,7 @@ web_driver = None
 app = Flask(__name__)
 
 def attach_search_query(query):
-    query_url = base_url+"queryText="+query+"&rowsPerPage=10"
+    query_url = base_url+"queryText="+query+"&rowsPerPage=25"
     return query_url
 
 def initialize_webdriver():
@@ -66,28 +66,27 @@ def get_total_count_and_pages(div):
     span = dashboard_header.find_elements_by_tag_name("span")[0]
     strong_span = span.find_elements_by_tag_name("span")[1]
     total_count = int(strong_span.text.replace(",",""))
-    total_pages = math.ceil(total_count/10)
+    total_pages = math.ceil(total_count/25)
     return total_count,total_pages
 
 def extract_papers(query):
     start = time.time()
     query_url = attach_search_query(query)
     web_driver = initialize_webdriver()
-    final_paper_list = []
+    final_paper_list = {}
     with web_driver as driver:
         wait = WebDriverWait(driver,20)
         driver.get(query_url)
         wait.until(presence_of_element_located((By.CLASS_NAME,"main-section")))
-        metadata = {}
         print('Finished waiting')
         total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0])
-        metadata["total_count"] = total_count
-        metadata["total_pages"] = total_pages
+        final_paper_list["total_count"] = total_count
+        final_paper_list["total_pages"] = total_pages
         #print(total_count)
         #print(total_pages)
         #print("*********************************************************************")
-        final_paper_list.append(metadata)
         results = driver.find_elements_by_class_name("List-results-items")
+        final_results = []
         for div in results:
             paper = {}
             title,paper_link = get_paper_title_and_link(div)
@@ -103,10 +102,11 @@ def extract_papers(query):
             #print(description)
             #print(publisher_info)
             #print('--------------------------------------------------------------------------------------------------------')
-            final_paper_list.append(paper)
+            final_results.append(paper)
         #driver.close()
     end = time.time()
     print(end-start)
+    final_paper_list["papers"] = final_results
     response = json.dumps(final_paper_list)
     return response
 
