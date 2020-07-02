@@ -66,7 +66,7 @@ def get_total_count_and_pages(div,rows_per_page):
     span = dashboard_header.find_elements_by_tag_name("span")[0]
     strong_span = span.find_elements_by_tag_name("span")[1]
     total_count = int(strong_span.text.replace(",",""))
-    total_pages = math.ceil(total_count/rows_per_page)
+    total_pages = math.ceil(total_count/int(rows_per_page))
     return total_count,total_pages
 
 def extract_papers(query,rows_per_page):
