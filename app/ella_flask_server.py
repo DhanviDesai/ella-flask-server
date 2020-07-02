@@ -107,7 +107,8 @@ def extract_papers(query):
         #driver.close()
     end = time.time()
     print(end-start)
-    return json.dumps(final_paper_list)
+    response = json.dumps(final_paper_list)
+    return response
 
 @app.route('/')
 def home_page():
