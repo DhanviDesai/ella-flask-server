@@ -140,13 +140,13 @@ def get_paper_link_details(web_driver,link,type):
         print("Finished waiting")
         title = driver.find_elements_by_class_name("document-title")[0].text
         abstract = driver.find_elements_by_class_name("abstract-text")[0].text
-		abstract = abstract.replace("Abstract:","").strip()
+        abstract = abstract.replace("Abstract:","").strip()
         published_in_div = driver.find_elements_by_class_name("stats-document-abstract-publishedIn")[0]
-		published_in = published_in_div.find_elements_by_tag_name("a")[0].text
-		date_of_conference = driver.find_elements_by_class_name("doc-abstract-confdate")[0].text
-		date_of_conference = date_of_conference.replace("Date of Conference:","").strip()
-		date_added = driver.find_elements_by_class_name("doc-abstract-dateadded")[0].text
-		date_added = date_added.replace("Date Added to IEEE Xplore:","").strip()
+        published_in = published_in_div.find_elements_by_tag_name("a")[0].text
+        date_of_conference = driver.find_elements_by_class_name("doc-abstract-confdate")[0].text
+        date_of_conference = date_of_conference.replace("Date of Conference:","").strip()
+        date_added = driver.find_elements_by_class_name("doc-abstract-dateadded")[0].text
+        date_added = date_added.replace("Date Added to IEEE Xplore:","").strip()
         status,download_link = get_download_link(link)
         result["title"] = title
         result["abstract"] = abstract
