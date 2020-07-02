@@ -10,8 +10,12 @@ import math
 import time
 import os
 import json
+import requests
+from bs4 import BeautifulSoup
 
 base_url = "https://ieeexplore.ieee.org/search/searchresult.jsp?"
+
+scihub_url = "https://sci-hub.tw/"
 
 GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google_chrome'
 
@@ -73,7 +77,6 @@ def get_total_count_and_pages(div,rows_per_page):
 def extract_papers(web_driver,query,rows_per_page):
     start = time.time()
     query_url = attach_search_query(query,rows_per_page)
-    #web_driver = initialize_webdriver()
     final_paper_list = {}
     with web_driver as driver:
         wait = WebDriverWait(driver,20)
@@ -83,9 +86,6 @@ def extract_papers(web_driver,query,rows_per_page):
         total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0],rows_per_page)
         final_paper_list["total_count"] = total_count
         final_paper_list["total_pages"] = total_pages
-        #print(total_count)
-        #print(total_pages)
-        #print("*********************************************************************")
         results = driver.find_elements_by_class_name("List-results-items")
         final_results = []
         for div in results:
@@ -98,11 +98,6 @@ def extract_papers(web_driver,query,rows_per_page):
             paper["description"] = description
             paper["publisher_info"] = publisher_info
             paper["paper_link"] = paper_link
-            #print(title)
-            #print(authors)
-            #print(description)
-            #print(publisher_info)
-            #print('--------------------------------------------------------------------------------------------------------')
             final_results.append(paper)
         driver.close()
     end = time.time()
@@ -110,6 +105,58 @@ def extract_papers(web_driver,query,rows_per_page):
     final_paper_list["papers"] = final_results
     response = json.dumps(final_paper_list)
     return response
+
+def get_download_link(link):
+    url = scihub_url+link
+	main_page = requests.get(url)
+	soup = BeautifulSoup(main_page.text,"html.parser")
+	buttons_div = soup.find("div",attrs = {"id":"buttons"})
+	if buttons_div == None:
+		return False,None
+	all_links = buttons_div.find_all("a")
+	for link in all_links:
+		if "save" in link.text:
+			pdf_url = link.get("onclick").split("=")[1].replace("'","")
+			#print('This is the pdf_url {}'.format(pdf_url))
+			if("https:" not in pdf_url):
+				pdf_url = "https:"+pdf_url
+	pdf_page = requests.get(pdf_url)
+	try:
+		pdf_page.raise_for_status()
+	except requests.exceptions.HTTPError as e:
+		print('Not downloadable')
+		return False,None
+	return True,pdf_url
+
+def get_paper_link_details(web_driver,link,type):
+    if "Course" in type:
+        result = {"error":"You selected a course, no information here"}
+        return json.dumps(result)
+    result = {}
+    with web_driver as driver:
+        wait = WebDriverWait(driver,20)
+        driver.get(link)
+        wait.until(presence_of_element_located((By.CLASS_NAME,"abstract-text")))
+        print("Finished waiting")
+        title = driver.find_elements_by_class_name("document-title")[0].text
+        abstract = driver.find_elements_by_class_name("abstract-text")[0].text
+		abstract = abstract.replace("Abstract:","").strip()
+        published_in_div = driver.find_elements_by_class_name("stats-document-abstract-publishedIn")[0]
+		published_in = published_in_div.find_elements_by_tag_name("a")[0].text
+		date_of_conference = driver.find_elements_by_class_name("doc-abstract-confdate")[0].text
+		date_of_conference = date_of_conference.replace("Date of Conference:","").strip()
+		date_added = driver.find_elements_by_class_name("doc-abstract-dateadded")[0].text
+		date_added = date_added.replace("Date Added to IEEE Xplore:","").strip()
+        status,download_link = get_download_link(link)
+        result["title"] = title
+        result["abstract"] = abstract
+        result["published_in"] = published_in
+        result["date_of_conference"] = date_of_conference
+        result["date_added"] = date_added
+        result["status"] = status
+        result["download_link"] = download_link
+        driver.close()
+    return json.dumps(result)
 
 @app.route('/')
 def home_page():
@@ -121,4 +168,15 @@ def search():
     rows_per_page = request.args.get("rowsPerPage")
     web_driver = initialize_webdriver()
     response = extract_papers(web_driver,query_text,rows_per_page)
+    return response
+
+@app.route("/paperLink",methods=["GET","POST"])
+def paper_link():
+    start = time.time()
+    link = request.args.get("link")
+    type = request.args.get("type")
+    web_driver = initialize_webdriver()
+    response = get_paper_link_details(web_driver,link,type)
+    end = time.time()
+    print(end-start)
     return response
