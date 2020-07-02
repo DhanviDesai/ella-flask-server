@@ -69,10 +69,10 @@ def get_total_count_and_pages(div,rows_per_page):
     total_pages = math.ceil(total_count/int(rows_per_page))
     return total_count,total_pages
 
-def extract_papers(query,rows_per_page):
+def extract_papers(web_driver,query,rows_per_page):
     start = time.time()
     query_url = attach_search_query(query,rows_per_page)
-    web_driver = initialize_webdriver()
+    #web_driver = initialize_webdriver()
     final_paper_list = {}
     with web_driver as driver:
         wait = WebDriverWait(driver,20)
@@ -114,9 +114,13 @@ def extract_papers(query,rows_per_page):
 def home_page():
     return "<h1>Welcome to Ella Server</h1>"
 
+web_driver = None
+
 @app.route("/search",methods=["GET","POST"])
 def search():
     query_text = request.args.get("queryText")
     rows_per_page = request.args.get("rowsPerPage")
-    response = extract_papers(query_text,rows_per_page)
+    if web_driver == None:
+        web_driver = initialize_webdriver()
+    response = extract_papers(web_driver,query_text,rows_per_page)
     return response
