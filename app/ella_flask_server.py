@@ -108,25 +108,25 @@ def extract_papers(web_driver,query,rows_per_page):
 
 def get_download_link(link):
     url = scihub_url+link
-	main_page = requests.get(url)
-	soup = BeautifulSoup(main_page.text,"html.parser")
-	buttons_div = soup.find("div",attrs = {"id":"buttons"})
-	if buttons_div == None:
-		return False,None
-	all_links = buttons_div.find_all("a")
-	for link in all_links:
-		if "save" in link.text:
-			pdf_url = link.get("onclick").split("=")[1].replace("'","")
-			#print('This is the pdf_url {}'.format(pdf_url))
-			if("https:" not in pdf_url):
-				pdf_url = "https:"+pdf_url
-	pdf_page = requests.get(pdf_url)
-	try:
-		pdf_page.raise_for_status()
-	except requests.exceptions.HTTPError as e:
-		print('Not downloadable')
-		return False,None
-	return True,pdf_url
+    main_page = requests.get(url)
+    soup = BeautifulSoup(main_page.text,"html.parser")
+    buttons_div = soup.find("div",attrs = {"id":"buttons"})
+    if buttons_div == None:
+        return False,None
+    all_links = buttons_div.find_all("a")
+    for link in all_links:
+        if "save" in link.text:
+            pdf_url = link.get("onclick").split("=")[1].replace("'","")
+            #print('This is the pdf_url {}'.format(pdf_url))
+            if("https:" not in pdf_url):
+                pdf_url = "https:"+pdf_url
+    pdf_page = requests.get(pdf_url)
+    try:
+        pdf_page.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        print('Not downloadable')
+        return False,None
+    return True,pdf_url
 
 def get_paper_link_details(web_driver,link,type):
     if "Course" in type:
