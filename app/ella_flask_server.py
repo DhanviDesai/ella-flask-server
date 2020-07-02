@@ -117,10 +117,8 @@ def home_page():
 
 @app.route("/search",methods=["GET","POST"])
 def search():
-    global web_driver
     query_text = request.args.get("queryText")
     rows_per_page = request.args.get("rowsPerPage")
-    if web_driver == None:
-        web_driver = initialize_webdriver()
+    web_driver = initialize_webdriver()
     response = extract_papers(web_driver,query_text,rows_per_page)
     return response
