@@ -86,6 +86,12 @@ def extract_papers(web_driver,query,rows_per_page):
         total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0],rows_per_page)
         final_paper_list["total_count"] = total_count
         final_paper_list["total_pages"] = total_pages
+        refinement_content_type = []
+        content_type_main = driver.find_elements_by_class_name("facet-ctype-options")[0]
+        content_type_divs = content_type_main.find_elements_by_tag_name("div")
+        for div in content_type_divs:
+            refinement_content_type.append(div.text)
+        final_paper_list["refinement_content_type"] = refinement_content_type
         results = driver.find_elements_by_class_name("List-results-items")
         final_results = []
         for div in results:
