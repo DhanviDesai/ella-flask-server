@@ -117,4 +117,5 @@ def home_page():
 @app.route("/search",methods=["GET","POST"])
 def search():
     query_text = request.args.get("queryText")
-    extract_papers(query_text)
+    response = extract_papers(query_text)
+    return response
