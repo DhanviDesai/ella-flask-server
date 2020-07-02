@@ -104,7 +104,7 @@ def extract_papers(web_driver,query,rows_per_page):
             #print(publisher_info)
             #print('--------------------------------------------------------------------------------------------------------')
             final_results.append(paper)
-        #driver.close()
+        driver.close()
     end = time.time()
     print(end-start)
     final_paper_list["papers"] = final_results
