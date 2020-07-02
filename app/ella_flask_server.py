@@ -78,7 +78,7 @@ def extract_papers(web_driver,query,rows_per_page):
     with web_driver as driver:
         wait = WebDriverWait(driver,20)
         driver.get(query_url)
-        wait.until(presence_of_element_located((By.CLASS_NAME,"Dashboard-section")))
+        wait.until(presence_of_element_located((By.CLASS_NAME,"Dashboard-header")))
         print('Finished waiting')
         total_count,total_pages = get_total_count_and_pages(driver.find_elements_by_class_name("Dashboard-section")[0],rows_per_page)
         final_paper_list["total_count"] = total_count
