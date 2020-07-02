@@ -92,6 +92,13 @@ def extract_papers(web_driver,query,rows_per_page):
         for div in content_type_divs:
             refinement_content_type.append(div.text)
         final_paper_list["refinement_content_type"] = refinement_content_type
+        papers_range = []
+        outer_span = driver.find_elements_by_class_name("span-horizantal")[0]
+        inner_span = outer_span.find_elements_by_tag_name("span")[0]
+        inner_span_labels = inner_span.find_elements_by_tag_name("label")
+        papers_range.append(inner_span_labels[0].text)
+        papers_range.append(inner_span_labels[1].text)
+        final_paper_list["papers_range"] = papers_range
         results = driver.find_elements_by_class_name("List-results-items")
         final_results = []
         for div in results:
