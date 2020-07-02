@@ -23,6 +23,7 @@ app = Flask(__name__)
 
 def attach_search_query(query,rows_per_page):
     query_url = base_url+"queryText="+query+"&rowsPerPage="+rows_per_page
+    print(query_url)
     return query_url
 
 def initialize_webdriver():
@@ -114,10 +115,9 @@ def extract_papers(web_driver,query,rows_per_page):
 def home_page():
     return "<h1>Welcome to Ella Server</h1>"
 
-web_driver = None
-
 @app.route("/search",methods=["GET","POST"])
 def search():
+    global web_driver
     query_text = request.args.get("queryText")
     rows_per_page = request.args.get("rowsPerPage")
     if web_driver == None:
