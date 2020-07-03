@@ -138,12 +138,9 @@ def get_download_link(link):
             if("https:" not in pdf_url):
                 pdf_url = "https:"+pdf_url
     pdf_page = requests.get(pdf_url)
-    try:
-        pdf_page.raise_for_status()
-    except requests.exceptions.HTTPError as e:
-        print('Not downloadable')
-        return False,None
-    return True,pdf_url
+    if(not pdf_page.status_code == 502):
+        print(pdf_url)
+        return True,pdf_url
 
 def get_paper_link_details(web_driver,link,type):
     if "Course" in type:
