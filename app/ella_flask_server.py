@@ -210,7 +210,7 @@ def download_link_endpoint():
     link = request.args.get("link")
     status,download_link = get_download_link(link)
     response = {}
-    respone["status"] = status
+    response["status"] = status
     response["download_link"] = download_link
     end = time.time()
     print(end-time)
