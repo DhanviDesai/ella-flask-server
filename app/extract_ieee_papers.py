@@ -172,7 +172,6 @@ def get_paper_link_details(web_driver,link,type):
             date_added = date_added_div[0].text
             date_added = date_added.replace("Date Added to IEEE Xplore:","").strip()
             result["date_added"] = date_added
-        status,download_link = get_download_link(link)
         result["title"] = title
         result["abstract"] = abstract
         driver.close()
