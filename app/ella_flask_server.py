@@ -25,8 +25,14 @@ web_driver = None
 
 app = Flask(__name__)
 
-def attach_search_query(query,rows_per_page):
+def attach_search_query(query,rows_per_page,range,filters):
     query_url = base_url+"queryText="+query+"&rowsPerPage="+rows_per_page
+    if(not range == None):
+        query_url += "&ranges="+range
+    if(not filters == None):
+        filters_list = filters.split(',')
+        for filter in filters_list :
+            query_url+= "&refinements=ContentType:"+filter
     print(query_url)
     return query_url
 
@@ -74,9 +80,9 @@ def get_total_count_and_pages(div,rows_per_page):
     total_pages = math.ceil(total_count/int(rows_per_page))
     return total_count,total_pages
 
-def extract_papers(web_driver,query,rows_per_page):
+def extract_papers(web_driver,query,rows_per_page,range,filters):
     start = time.time()
-    query_url = attach_search_query(query,rows_per_page)
+    query_url = attach_search_query(query,rows_per_page,range,filters)
     final_paper_list = {}
     with web_driver as driver:
         wait = WebDriverWait(driver,20)
@@ -183,8 +189,13 @@ def home_page():
 def search():
     query_text = request.args.get("queryText")
     rows_per_page = request.args.get("rowsPerPage")
+    range = None
+    filters = None
+    range = request.args.get("range")
+    filters = request.args.get("filters")
+    print(filters)
     web_driver = initialize_webdriver()
-    response = extract_papers(web_driver,query_text,rows_per_page)
+    response = extract_papers(web_driver,query_text,rows_per_page,range,filters)
     return response
 
 @app.route("/paperLink",methods=["GET","POST"])
