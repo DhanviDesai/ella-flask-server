@@ -1,10 +1,10 @@
 from flask import Flask
 from flask import request
 import os
+import time
 
 from .extract_ieee_papers import extract_papers,get_paper_link_details,get_download_link,initialize_webdriver
-#import os.path.normpath(os.path.join(os.getcwd(),"/extract_ieee_papers"))
-#import extract_ieee_papers
+
 
 app = Flask(__name__)
 
