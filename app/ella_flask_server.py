@@ -1,6 +1,5 @@
 from flask import Flask
 from flask import request
-import os
 import time
 
 from .extract_ieee_papers import extract_papers,get_paper_link_details,get_download_link,initialize_webdriver
@@ -41,10 +40,7 @@ def paper_link():
 def download_link_endpoint():
     start = time.time()
     link = request.args.get("link")
-    status,download_link = get_download_link(link)
-    response = {}
-    response["status"] = status
-    response["download_link"] = download_link
+    response = get_download_link(link)
     end = time.time()
     print(end-start)
-    return json.dumps(response)
+    return response

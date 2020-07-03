@@ -121,12 +121,15 @@ def extract_papers(web_driver,query,rows_per_page,range,filters):
     return response
 
 def get_download_link(link):
+    response = {}
     url = scihub_url+link
     main_page = requests.get(url)
     soup = BeautifulSoup(main_page.text,"html.parser")
     buttons_div = soup.find("div",attrs = {"id":"buttons"})
     if buttons_div == None:
-        return False,None
+        response["status"] = False
+        response["download_link"] = None
+        return json.dumps(response)
     all_links = buttons_div.find_all("a")
     for link in all_links:
         if "save" in link.text:
@@ -137,7 +140,9 @@ def get_download_link(link):
     pdf_page = requests.get(pdf_url)
     if(not pdf_page.status_code == 502):
         print(pdf_url)
-        return True,pdf_url
+        response["status"] = True
+        response["download_link"] = pdf_url
+        return json.dumps(response)
 
 def get_paper_link_details(web_driver,link,type):
     if "Course" in type:
