@@ -173,8 +173,6 @@ def get_paper_link_details(web_driver,link,type):
         status,download_link = get_download_link(link)
         result["title"] = title
         result["abstract"] = abstract
-        result["status"] = status
-        result["download_link"] = download_link
         driver.close()
     return json.dumps(result)
 
@@ -205,3 +203,15 @@ def paper_link():
     end = time.time()
     print(end-start)
     return response
+
+@app.route("/getDownloadLink",methods=["GET","POST"])
+def download_link_endpoint():
+    start = time.time()
+    link = request.args.get("link")
+    status,download_link = get_download_link(link)
+    response = {}
+    respone["status"] = status
+    response["download_link"] = download_link
+    end = time.time()
+    print(end-time)
+    return json.dumps(response)
