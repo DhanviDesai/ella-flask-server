@@ -126,6 +126,7 @@ def get_download_link(link):
     main_page = requests.get(url)
     soup = BeautifulSoup(main_page.text,"html.parser")
     buttons_div = soup.find("div",attrs = {"id":"buttons"})
+    print(buttons_div)
     if buttons_div is None:
         response["status"] = False
         response["download_link"] = None
