@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import request
 from flask import jsonify
+import flask
 import time
 
 from .extract_ieee_papers import extract_papers,get_paper_link_details,get_download_link,initialize_webdriver
@@ -24,7 +25,9 @@ def search():
     print(filters)
     web_driver = initialize_webdriver()
     response = extract_papers(web_driver,query_text,rows_per_page,range,filters)
-    return jsonify(response)
+    Response = flask.response(response)
+    Response.headers['Content-Type'] = 'application/json'
+    return Response
 
 @app.route("/paperLink",methods=["GET","POST"])
 def paper_link():
@@ -35,7 +38,7 @@ def paper_link():
     response = get_paper_link_details(web_driver,link,paper_type)
     end = time.time()
     print(end-start)
-    return jsonify(response)
+    return response
 
 @app.route("/getDownloadLink",methods=["GET","POST"])
 def download_link_endpoint():

@@ -117,7 +117,7 @@ def extract_papers(web_driver,query,rows_per_page,range,filters):
     end = time.time()
     print(end-start)
     final_paper_list["papers"] = final_results
-    #response = json.dumps(final_paper_list)
+    response = json.dumps(final_paper_list)
     return response
 
 def get_download_link(link):
