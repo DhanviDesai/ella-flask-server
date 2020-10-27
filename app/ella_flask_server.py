@@ -29,9 +29,9 @@ def search():
 def paper_link():
     start = time.time()
     link = request.args.get("link")
-    type = request.args.get("type")
+    paper_type = request.args.get("type")
     web_driver = initialize_webdriver()
-    response = get_paper_link_details(web_driver,link,type)
+    response = get_paper_link_details(web_driver,link,paper_type)
     end = time.time()
     print(end-start)
     return response
