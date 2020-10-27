@@ -25,9 +25,7 @@ def search():
     print(filters)
     web_driver = initialize_webdriver()
     response = extract_papers(web_driver,query_text,rows_per_page,range,filters)
-    Response = flask.response(response)
-    Response.headers['Content-Type'] = 'application/json'
-    return Response
+    return response,200
 
 @app.route("/paperLink",methods=["GET","POST"])
 def paper_link():
@@ -38,7 +36,7 @@ def paper_link():
     response = get_paper_link_details(web_driver,link,paper_type)
     end = time.time()
     print(end-start)
-    return response
+    return response,200
 
 @app.route("/getDownloadLink",methods=["GET","POST"])
 def download_link_endpoint():
@@ -47,4 +45,4 @@ def download_link_endpoint():
     response = get_download_link(link)
     end = time.time()
     print(end-start)
-    return jsonify(response)
+    return response,200
