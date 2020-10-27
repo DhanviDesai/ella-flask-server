@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 
 base_url = "https://ieeexplore.ieee.org/search/searchresult.jsp?"
 
-scihub_url = "https://sci-hub.tw/"
+scihub_url = "https://sci-hub.tf/"
 
 GOOGLE_CHROME_BIN = '/app/.apt/usr/bin/google_chrome'
 
