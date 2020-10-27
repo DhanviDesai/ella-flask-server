@@ -124,7 +124,10 @@ def get_download_link(link):
     response = {}
     url = scihub_url+link
     print(url)
-    main_page = requests.get(url)
+    headers={
+    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36'
+    }
+    main_page = requests.get(url,headers=headers)
     soup = BeautifulSoup(main_page.text,"html.parser")
     buttons_div = soup.find("div",attrs = {"id":"buttons"})
     print(buttons_div)
