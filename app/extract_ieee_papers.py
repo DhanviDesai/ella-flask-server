@@ -117,12 +117,13 @@ def extract_papers(web_driver,query,rows_per_page,range,filters):
     end = time.time()
     print(end-start)
     final_paper_list["papers"] = final_results
-    response = json.dumps(final_paper_list)
+    response = final_paper_list
     return response
 
 def get_download_link(link):
     response = {}
     url = scihub_url+link
+    print(url)
     main_page = requests.get(url)
     soup = BeautifulSoup(main_page.text,"html.parser")
     buttons_div = soup.find("div",attrs = {"id":"buttons"})
@@ -130,7 +131,7 @@ def get_download_link(link):
     if buttons_div is None:
         response["status"] = False
         response["download_link"] = None
-        return json.dumps(response)
+        return response
     all_links = buttons_div.find_all("a")
     for link in all_links:
         if "save" in link.text:
@@ -143,12 +144,12 @@ def get_download_link(link):
         print(pdf_url)
         response["status"] = True
         response["download_link"] = pdf_url
-        return json.dumps(response)
+        return response
 
 def get_paper_link_details(web_driver,link,type):
     if "Course" in type:
         result = {"error":"You selected a course, no information here"}
-        return json.dumps(result)
+        return result
     result = {}
     with web_driver as driver:
         wait = WebDriverWait(driver,20)
@@ -176,4 +177,4 @@ def get_paper_link_details(web_driver,link,type):
         result["title"] = title
         result["abstract"] = abstract
         driver.close()
-    return json.dumps(result)
+    return result
